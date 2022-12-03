@@ -41,6 +41,9 @@ struct rbtree {
   int (*cmp)(void *k1, void *k2);
 };
 
+typedef struct rbnode RbNode;
+typedef struct rbtree RbTree;
+
 void rbtree_remove(struct rbtree *, struct rbnode *);
 struct rbnode *rbtree_insert(struct rbtree *, struct rbnode *);
 struct rbnode *rbtree_find(struct rbtree *, void *);

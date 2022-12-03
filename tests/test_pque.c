@@ -1,6 +1,8 @@
-#include <pque.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <assert.h>
+
+#include "pque.h"
 
 int intcmp(void *_a, void *_b) {
     int a = *(int*)_a;
@@ -22,6 +24,15 @@ int main() {
         int *top = pq_top(&pq);
         assert(i == *top);
         pq_pop(&pq);
+    }
+    assert(pq_top(&pq) == NULL);
+    int elems2[10] = {10, 8, 7, 9, 5, 6, 4, 2, 3, 1};
+    int expected[10] = {10, 8, 7, 7, 5, 5, 4, 2, 2, 1};
+    for (int i = 0; i < 10; i++) {
+        int e = elems2[i];
+        pq_push(&pq, &e);
+        int *top = pq_top(&pq);
+        assert(*top == expected[i]);
     }
     printf("[PASSED] test_pque\n");
     return 0;

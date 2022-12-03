@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <assert.h>
 
 #include "rbtree.h"
 
@@ -9,15 +10,13 @@ int int_cmp(void *a, void *b) {
 }
 
 typedef struct {
-    struct rbnode;
+    RbNode node;
     int key;
     int value;
 } IntIntEntry;
 
-typedef struct rbnode RbNode;
-
 int main() {
-    struct rbtree head = {NULL, int_cmp};
+    RbTree head = {NULL, int_cmp};
     IntIntEntry *n;
 
     int a[5] = {1, 2, 3, 4, 5};
@@ -32,19 +31,20 @@ int main() {
     int find = 3; 
     IntIntEntry* iter;
     iter = (IntIntEntry*)rbtree_find(&head, &find);
-    printf("%d\n", iter->key);
+    assert(iter->key == 3);
     
     rbtree_remove(&head, (RbNode*)iter);
     free(iter);
-
-    printf("--------------\n");
     
     iter = (IntIntEntry*)rbtree_min(&head);
+    int expected[4] = {1, 2, 4, 5};
+    int i = 0;
     for (; iter != NULL; iter = (IntIntEntry*)rbtree_next(&head, (RbNode*)iter)) {
-        printf("%d\n", iter->key);
+        assert(iter->key == expected[i]);
+        i++;
     }
 
     rbtree_free(&head, NULL);
-    
+    printf("[PASSED] test_rbtree\n");
     return 0;
 }
