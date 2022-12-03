@@ -44,10 +44,13 @@ struct rbtree {
 typedef struct rbnode RbNode;
 typedef struct rbtree RbTree;
 
-void rbtree_remove(struct rbtree *, struct rbnode *);
-struct rbnode *rbtree_insert(struct rbtree *, struct rbnode *);
-struct rbnode *rbtree_find(struct rbtree *, void *);
-struct rbnode *rbtree_next(struct rbtree *, struct rbnode *);
-struct rbnode *rbtree_min(struct rbtree *);
-struct rbnode *rbtree_max(struct rbtree *);
+void rbtree_remove(struct rbtree *, void* iter);
+
+// return a iterator
+void* rbtree_insert(struct rbtree *, void *treenode);
+void* rbtree_find(struct rbtree *, void *val);
+void* rbtree_next(struct rbtree *, void* iter);
+void* rbtree_min(struct rbtree *);
+void* rbtree_max(struct rbtree *);
+
 void rbtree_free(struct rbtree *, void (*free_cb)(void*));

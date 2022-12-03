@@ -16,7 +16,7 @@ typedef struct {
 } IntIntEntry;
 
 int main() {
-    RbTree head = {NULL, int_cmp};
+    RbTree tree = {NULL, int_cmp};
     IntIntEntry *n;
 
     int a[5] = {1, 2, 3, 4, 5};
@@ -25,26 +25,26 @@ int main() {
         n->key = a[i];
         n->value = i;
 
-        rbtree_insert(&head, (RbNode*)n);
+        rbtree_insert(&tree, n);
     }
-    
+
     int find = 3; 
     IntIntEntry* iter;
-    iter = (IntIntEntry*)rbtree_find(&head, &find);
+    iter = rbtree_find(&tree, &find);
     assert(iter->key == 3);
-    
-    rbtree_remove(&head, (RbNode*)iter);
+
+    rbtree_remove(&tree, iter);
     free(iter);
-    
-    iter = (IntIntEntry*)rbtree_min(&head);
+
+    iter = rbtree_min(&tree);
     int expected[4] = {1, 2, 4, 5};
     int i = 0;
-    for (; iter != NULL; iter = (IntIntEntry*)rbtree_next(&head, (RbNode*)iter)) {
+    for (; iter != NULL; iter = rbtree_next(&tree, iter)) {
         assert(iter->key == expected[i]);
         i++;
     }
 
-    rbtree_free(&head, NULL);
+    rbtree_free(&tree, NULL);
     printf("[PASSED] test_rbtree\n");
     return 0;
 }

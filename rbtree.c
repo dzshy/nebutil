@@ -28,10 +28,10 @@
 #include "rbtree.h"
 
 static struct rbnode *rbtree_RB_MINMAX(struct rbtree *, int);
-struct rbnode *rbtree_min(struct rbtree *head) {
+void* rbtree_min(struct rbtree *head) {
     return rbtree_RB_MINMAX(head, -1);
 }
-struct rbnode *rbtree_max(struct rbtree *head) {
+void* rbtree_max(struct rbtree *head) {
     return rbtree_RB_MINMAX(head, 1);
 }
 
@@ -333,7 +333,8 @@ static void rbtree_remove_COLOR(struct rbtree *head, struct rbnode *parent,
     (elm)->entry.rbe_color = 0;
 }
 
-void rbtree_remove(struct rbtree *head, struct rbnode *elm) {
+void rbtree_remove(struct rbtree *head, void* elmv) {
+  struct rbnode *elm = elmv;
   struct rbnode *child, *parent;
   int color;
   if ((elm)->entry.rbe_left == NULL)
@@ -397,7 +398,8 @@ color:
     rbtree_remove_COLOR(head, parent, child);
 }
 
-struct rbnode *rbtree_insert(struct rbtree *head, struct rbnode *elm) {
+void* rbtree_insert(struct rbtree *head, void *elmv) {
+  struct rbnode *elm = elmv;
   struct rbnode *tmp;
   struct rbnode *parent = NULL;
   int comp = 0;
@@ -429,7 +431,7 @@ struct rbnode *rbtree_insert(struct rbtree *head, struct rbnode *elm) {
   return (NULL);
 }
 
-struct rbnode *rbtree_find(struct rbtree *head, void *key) {
+void* rbtree_find(struct rbtree *head, void *key) {
   struct rbnode *tmp = (head)->rbh_root;
   int comp;
   while (tmp) {
@@ -444,7 +446,8 @@ struct rbnode *rbtree_find(struct rbtree *head, void *key) {
   return (NULL);
 }
 
-struct rbnode *rbtree_next(struct rbtree *head, struct rbnode *elm) {
+void* rbtree_next(struct rbtree *head, void *elmv) {
+  struct rbnode *elm = elmv;
   if ((elm)->entry.rbe_right) {
     elm = (elm)->entry.rbe_right;
     while ((elm)->entry.rbe_left)
