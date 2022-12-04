@@ -1,1 +1,6 @@
 /test_*
+*.o
+build/
+*.elf
+*.a
+doing/
