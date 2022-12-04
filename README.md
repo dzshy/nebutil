@@ -1,7 +1,31 @@
-# C Data Structures
+# Nebutil
 
-Generic data structures in C:
+Generic data structures and algorithms in C.
+
+## Implemented
 
 - (Augmented) Red-black tree
-    - Can support interval tree, segment tree, etc.
+    - Has ability to support interval tree, segment tree, etc.
 - Priority queue
+- CRC32
+
+## TODO
+
+- Hash Table
+
+## Build
+
+```
+make
+```
+
+## Run tests
+
+```
+make test
+```
+
+## Usage
+
+See tests and header files.
+
