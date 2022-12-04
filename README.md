@@ -2,5 +2,6 @@
 
 Generic data structures in C:
 
-- Red-black tree
+- (Augmented) Red-black tree
+    - Can support interval tree, segment tree, etc.
 - Priority queue
