@@ -1,6 +1,10 @@
 # Nebutil
 
-Generic data structures and algorithms in C.
+Implementation of generic data structures and algorithms in C.
+
+## Motivation
+
+I want to solve LeetCode problems in C, but most open source libraries are bloated. So I try to hand-craft one.
 
 ## Implemented
 
