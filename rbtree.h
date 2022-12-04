@@ -1,6 +1,5 @@
 /*
  * Copyright 2002 Niels Provos <provos@citi.umich.edu>
- * Copyright 2020 "nebulabbadub" <nebulabbadub@outlook.com>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -39,6 +38,7 @@ struct rbnode {
 struct rbtree {
   struct rbnode *rbh_root;
   int (*cmp)(void *k1, void *k2);
+  void (*augment)(void *elm);
 };
 
 typedef struct rbnode RbNode;
@@ -52,5 +52,8 @@ void* rbtree_find(struct rbtree *, void *val);
 void* rbtree_next(struct rbtree *, void* iter);
 void* rbtree_min(struct rbtree *);
 void* rbtree_max(struct rbtree *);
+void* rbtree_left(void *node);
+void* rbtree_right(void *node);
+void* rbtree_parent(void *node);
 
 void rbtree_free(struct rbtree *, void (*free_cb)(void*));

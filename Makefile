@@ -1,20 +1,32 @@
-tests: test_rbtree \
-       test_pque \
-       test_crc32
+src =$(shell ls ./*.c)
+obj = $(src:.c=.o)
+
+tests=$(shell ls tests/*.c)
+tests_bin=$(tests:.c=.elf)
+
+all: libcdatastruct.a
+	-rm -rf build/
+	-@mkdir -p build
+	-@mkdir -p build/include/
+	-@mkdir -p build/lib
+	mv libcdatastruct.a build/lib/
+	cp *.h build/include/
+
+libcdatastruct.a: $(obj)
+	ar cr $@ $^
+
+test: $(tests_bin)
 	@echo
 	@echo "Run tests:"
-	@./test_rbtree && \
-	./test_pque && \
-	./test_crc32
+	@./runall.sh $^
 
-test_rbtree: rbtree.c rbtree.h tests/test_rbtree.c
-	gcc -g -I./ tests/test_rbtree.c rbtree.c -o test_rbtree
+$(obj):%.o:%.c
+	gcc -c -g $< -o $@
 
-test_pque: pque.c pque.h tests/test_pque.c
-	gcc -g -I./ tests/test_pque.c pque.c -o test_pque
-
-test_crc32: crc32.c crc32.h tests/test_crc32.c
-	gcc -g -I./ tests/test_crc32.c crc32.c -o test_crc32
+$(tests_bin):%.elf:%.c libcdatastruct.a
+	gcc -g -I./ $^ -o $@
 
 clean:
-	-rm test_*
+	-rm *.elf *.o
+	-rm -rf build
+
