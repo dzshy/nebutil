@@ -8,9 +8,6 @@ Generic data structures and algorithms in C.
     - Has ability to support interval tree, segment tree, etc.
 - Priority queue
 - CRC32
-
-## TODO
-
 - Hash Table
 
 ## Build

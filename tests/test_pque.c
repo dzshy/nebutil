@@ -13,6 +13,7 @@ int intcmp(void *_a, void *_b) {
 }
 
 int main() {
+    printf("[TEST] pque\n");
     PQue pq;
     pq_init(&pq, 3, sizeof(int), intcmp);
     int elems[10] = {1, 3, 2, 4, 6, 5, 9, 7, 8, 10};
@@ -34,6 +35,6 @@ int main() {
         int *top = pq_top(&pq);
         assert(*top == expected[i]);
     }
-    printf("[PASSED] test_pque\n");
+    printf("[PASS] pque\n\n");
     return 0;
 }

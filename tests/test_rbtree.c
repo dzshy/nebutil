@@ -29,6 +29,7 @@ int depth(void *n) {
 }
 
 int main() {
+    printf("[TEST] rbtree\n");
     RbTree tree = {NULL, cmpfunc, NULL};
     IntIntEntry *n;
 
@@ -58,7 +59,7 @@ int main() {
 
     rbtree_free(&tree, NULL);
     test_largedata();
-    printf("[PASSED] test_rbtree\n");
+    printf("[PASS] rbtree\n\n");
     return 0;
 }
 

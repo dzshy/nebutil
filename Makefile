@@ -22,7 +22,7 @@ test: $(tests_bin)
 $(obj):%.o:%.c
 	gcc -c -g $< -o $@
 
-$(tests_bin):%.elf:%.c libcdatastruct.a
+$(tests_bin):%.elf:%.c libnebutil.a
 	gcc -g -Isrc/ $^ -o $@
 
 clean:
