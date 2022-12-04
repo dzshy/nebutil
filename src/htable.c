@@ -34,7 +34,7 @@ static void setflag(void *iter, uint8_t flag) {
 void htable_init(HTable *ht, int elemsz, int cap, uint32_t (*hash)(void*),
                  bool (*eq)(void*, void*)) {
     if (cap < 16) cap = 16;
-    ht->buf = malloc(cap * (elemsz + 1) + 1);
+    ht->buf = malloc(cap * (elemsz + 1));
     memset(ht->buf, 0, cap * (elemsz + 1));
     ht->size = 0;
     ht->cap = cap;
@@ -54,11 +54,11 @@ bool htable_insert(HTable *ht, void* elem) {
     int hashcode = ht->hash(elem) % ht->cap;
     void *pos = ht->buf + hashcode * (ht->elemsz + 1) + 1;
     while (getflag(pos) != HTFL_NUL) {
+        if (getflag(pos) == HTFL_VAL && ht->eq(pos, elem)) return false;
+        pos += ht->elemsz + 1;
         if (pos >= htable_end(ht)) { // arrived end, restart from beginning
             pos = ht->buf + 1;
         }
-        if (getflag(pos) == HTFL_VAL && ht->eq(pos, elem)) return false;
-        pos += ht->elemsz + 1;
     }
     memcpy(pos, elem, ht->elemsz);
     setflag(pos, HTFL_VAL);
@@ -79,11 +79,11 @@ void* htable_find(HTable *ht, void* elem) {
     int hashcode = ht->hash(elem) % ht->cap;
     void *pos = ht->buf + hashcode * (ht->elemsz + 1) + 1;
     while (getflag(pos) != HTFL_NUL) {
+        if (getflag(pos) == HTFL_VAL && ht->eq(pos, elem)) return pos;
+        pos += ht->elemsz + 1;
         if (pos >= htable_end(ht)) { // arrived end, restart from beginning
             pos = ht->buf + 1;
         }
-        if (getflag(pos) == HTFL_VAL && ht->eq(pos, elem)) return pos;
-        pos += ht->elemsz + 1;
     }
     return NULL;
 }
@@ -96,10 +96,10 @@ void* htable_next(HTable *ht, void *iter) {
     void *pos = iter;
     pos += ht->elemsz + 1;
     while (getflag(pos) != HTFL_VAL) {
+        pos += ht->elemsz + 1;
         if (pos >= htable_end(ht)) { // arrived end, restart from beginning
             return NULL;
         }
-        pos += ht->elemsz + 1;
     }
     return pos;
 }
