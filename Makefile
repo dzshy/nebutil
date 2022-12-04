@@ -1,18 +1,17 @@
-src =$(shell ls ./*.c)
+src =$(shell ls src/*.c)
 obj = $(src:.c=.o)
 
 tests=$(shell ls tests/*.c)
 tests_bin=$(tests:.c=.elf)
 
-all: libcdatastruct.a
+all: libnebutil.a
 	-rm -rf build/
-	-@mkdir -p build
-	-@mkdir -p build/include/
+	-@mkdir -p build/include/nebutil/
 	-@mkdir -p build/lib
-	mv libcdatastruct.a build/lib/
-	cp *.h build/include/
+	mv libnebutil.a build/lib/
+	cp src/*.h build/include/nebutil
 
-libcdatastruct.a: $(obj)
+libnebutil.a: $(obj)
 	ar cr $@ $^
 
 test: $(tests_bin)
@@ -24,9 +23,9 @@ $(obj):%.o:%.c
 	gcc -c -g $< -o $@
 
 $(tests_bin):%.elf:%.c libcdatastruct.a
-	gcc -g -I./ $^ -o $@
+	gcc -g -Isrc/ $^ -o $@
 
 clean:
-	-rm *.elf *.o
+	-rm tests/*.elf src/*.o ./*.a
 	-rm -rf build
 
