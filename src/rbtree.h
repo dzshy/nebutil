@@ -32,7 +32,7 @@ struct rbnode {
     struct rbnode *rbe_parent;
     int rbe_color;
   } entry;
-  char content[];
+  char content[0];
 };
 
 struct rbtree {

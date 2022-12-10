@@ -14,6 +14,13 @@ I want to solve LeetCode problems in C, but most open source libraries are bloat
 - CRC32
 - Hash Table
 
+## TODO
+
+- Linked-list (stack/queue)
+- Vector
+- String
+- Unicode string
+
 ## Build
 
 ```

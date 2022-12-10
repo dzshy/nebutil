@@ -59,7 +59,7 @@ int main() {
 
     rbtree_free(&tree, NULL);
     test_largedata();
-    printf("[PASS] rbtree\n\n");
+    printf("[PASS] rbtree\n");
     return 0;
 }
 

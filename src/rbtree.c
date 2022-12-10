@@ -63,11 +63,11 @@ static void rbtree_remove_color(struct rbtree *head, struct rbnode *parent,
 
 static void rotate_left(struct rbtree *head, struct rbnode *elm) {
     struct rbnode *tmp = elm->entry.rbe_right;
-    if (elm->entry.rbe_right = tmp->entry.rbe_left) {
+    if ((elm->entry.rbe_right = tmp->entry.rbe_left)) {
         tmp->entry.rbe_left->entry.rbe_parent = elm;
     }
     augment(head, elm);
-    if (tmp->entry.rbe_parent = elm->entry.rbe_parent) {
+    if ((tmp->entry.rbe_parent = elm->entry.rbe_parent)) {
         if (elm == elm->entry.rbe_parent->entry.rbe_left)
           elm->entry.rbe_parent->entry.rbe_left = tmp;
         else
@@ -85,11 +85,11 @@ static void rotate_left(struct rbtree *head, struct rbnode *elm) {
 
 static void rotate_right(struct rbtree *head, struct rbnode *elm) {
     struct rbnode *tmp = elm->entry.rbe_left;
-    if (elm->entry.rbe_left = tmp->entry.rbe_right) {
+    if ((elm->entry.rbe_left = tmp->entry.rbe_right)) {
         tmp->entry.rbe_right->entry.rbe_parent = elm;
     }
     augment(head, elm);
-    if (tmp->entry.rbe_parent = elm->entry.rbe_parent) {
+    if ((tmp->entry.rbe_parent = elm->entry.rbe_parent)) {
         if (elm == elm->entry.rbe_parent->entry.rbe_left)
           elm->entry.rbe_parent->entry.rbe_left = tmp;
         else
@@ -174,7 +174,7 @@ static void rbtree_remove_color(struct rbtree *head, struct rbnode *parent,
         if (tmp->entry.rbe_right == NULL ||
             tmp->entry.rbe_right->entry.rbe_color == 0) {
           struct rbnode *oleft;
-          if (oleft = tmp->entry.rbe_left)
+          if ((oleft = tmp->entry.rbe_left))
             oleft->entry.rbe_color = BLACK;
           tmp->entry.rbe_color = RED;
           rotate_right(head, tmp);
@@ -207,7 +207,7 @@ static void rbtree_remove_color(struct rbtree *head, struct rbnode *parent,
         if (tmp->entry.rbe_left == NULL ||
             tmp->entry.rbe_left->entry.rbe_color == 0) {
           struct rbnode *oright;
-          if (oright = tmp->entry.rbe_right)
+          if ((oright = tmp->entry.rbe_right))
             oright->entry.rbe_color = BLACK;
           tmp->entry.rbe_color = RED;
           rotate_left(head, tmp);
@@ -238,7 +238,7 @@ void rbtree_remove(struct rbtree *head, void* elmv) {
   else {
     struct rbnode *old = elm, *left;
     elm = elm->entry.rbe_right;
-    while (left = elm->entry.rbe_left)
+    while ((left = elm->entry.rbe_left))
       elm = left;
     child = elm->entry.rbe_right;
     parent = elm->entry.rbe_parent;
@@ -272,7 +272,7 @@ void rbtree_remove(struct rbtree *head, void* elmv) {
       if (head->augment != NULL) {
           do {
               augment(head, left);
-          } while (left = left->entry.rbe_parent);
+          } while ((left = left->entry.rbe_parent));
       }
     }
     goto color;
@@ -290,7 +290,7 @@ void rbtree_remove(struct rbtree *head, void* elmv) {
     if (head->augment != NULL) {
         do {
             augment(head, goback);
-        } while (goback = goback->entry.rbe_parent);
+        } while ((goback = goback->entry.rbe_parent));
     }
   } else
     head->rbh_root = child;
@@ -327,7 +327,7 @@ void* rbtree_insert(struct rbtree *head, void *elmv) {
     if (head->augment != NULL) {
         do {
             augment(head, goback);
-        } while (goback = goback->entry.rbe_parent);
+        } while ((goback = goback->entry.rbe_parent));
     }
   } else
     head->rbh_root = elm;

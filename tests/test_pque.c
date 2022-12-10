@@ -35,6 +35,6 @@ int main() {
         int *top = pq_top(&pq);
         assert(*top == expected[i]);
     }
-    printf("[PASS] pque\n\n");
+    printf("[PASS] pque\n");
     return 0;
 }

@@ -2,7 +2,7 @@ src =$(shell ls src/*.c)
 obj = $(src:.c=.o)
 
 tests=$(shell ls tests/*.c)
-tests_bin=$(tests:.c=.elf)
+tests_bin=$(tests:.c=.bin)
 
 all: libnebutil.a
 	-rm -rf build/
@@ -17,15 +17,19 @@ libnebutil.a: $(obj)
 test: $(tests_bin)
 	@echo
 	@echo "Run tests:"
-	@./runall.sh $^
+	@scripts/runall.sh $^
 
 $(obj):%.o:%.c
-	gcc -c -g $< -o $@
+	cc -c -g $< -MD -MF $@.d -o $@
 
-$(tests_bin):%.elf:%.c libnebutil.a
-	gcc -g -Isrc/ $^ -o $@
+$(tests_bin):%.bin:%.c libnebutil.a
+	cc -g -Isrc/ $< libnebutil.a -MD -MF $@.d -o $@
 
 clean:
-	-rm tests/*.elf src/*.o ./*.a
+	-rm tests/*.bin src/*.o ./*.a
 	-rm -rf build
 
+DEPS := $(shell find . -name *.d)
+ifneq ($(DEPS),)
+include $(DEPS)
+endif

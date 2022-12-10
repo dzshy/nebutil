@@ -53,7 +53,7 @@ void checkaugment(IntIntEntry *node) {
 int main() {
     printf("[TEST] augment rbtree\n");
     test_largedata();
-    printf("[PASS] augment rbtree\n\n");
+    printf("[PASS] augment rbtree\n");
     return 0;
 }
 

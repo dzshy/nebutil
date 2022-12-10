@@ -1,6 +1,7 @@
 /test_*
 *.o
+*.d
 build/
-*.elf
+*.bin
 *.a
 doing/

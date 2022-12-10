@@ -69,6 +69,6 @@ int main() {
         assert(found[i]);
     }
 
-    printf("[PASS] htable\n\n");
+    printf("[PASS] htable\n");
 }
 

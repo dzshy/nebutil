@@ -13,7 +13,7 @@ static void* htable_end(HTable *ht) {
 
 static void rebuild(HTable *ht) {
     HTable newht;
-    htable_init(&newht, ht->elemsz, ht->size * 8, ht->hash, ht->eq);
+    htable_init(&newht, ht->elemsz, ht->size * 6, ht->hash, ht->eq);
     void *iter = htable_begin(ht);
     while (iter != NULL) {
         htable_insert(&newht, iter);
@@ -65,6 +65,7 @@ bool htable_insert(HTable *ht, void* elem) {
     if (pos < ht->begin || ht->begin == NULL) {
         ht->begin = pos;
     }
+    return true;
 }
 
 void htable_del(HTable *ht, void* iter) {
@@ -94,14 +95,12 @@ void* htable_begin(HTable *ht) {
 
 void* htable_next(HTable *ht, void *iter) {
     void *pos = iter;
-    pos += ht->elemsz + 1;
-    while (getflag(pos) != HTFL_VAL) {
+    do {
         pos += ht->elemsz + 1;
-        if (pos >= htable_end(ht)) { // arrived end, restart from beginning
+        if (pos >= htable_end(ht)) { 
             return NULL;
         }
-    }
+    } while (getflag(pos) != HTFL_VAL);
     return pos;
 }
-
 
