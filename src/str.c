@@ -60,3 +60,22 @@ void str_list_free(char **list) {
     free(list);
 }
 
+char* str_strip(char *str) {
+    int len = strlen(str);
+    char *begin = str;
+    char *end = str + len - 1;
+    while (isspace(*begin) && begin < end) {
+        begin++;
+    }
+    while (isspace(*end) && end >= begin) {
+        end--;
+    }
+    len = end - begin + 1;
+    char *buf = malloc(sizeof(char) * (len) + 1);
+    buf[len] = '\0';
+    memcpy(buf, begin, len);
+    return buf;
+}
+
+
+

@@ -57,10 +57,36 @@ void test_str_split() {
 
 }
 
+void test_str_strip() {
+    char *s;
+
+    s = str_strip("hello ");
+    assert(strcmp(s, "hello") == 0);
+
+    s = str_strip("hello");
+    assert(strcmp(s, "hello") == 0);
+
+    s = str_strip("\nhello ");
+    assert(strcmp(s, "hello") == 0);
+
+    s = str_strip("\nhello");
+    assert(strcmp(s, "hello") == 0);
+
+    s = str_strip("");
+    assert(strcmp(s, "") == 0);
+
+    s = str_strip("\n\t ");
+    assert(strcmp(s, "") == 0);
+
+    s = str_strip(" ");
+    assert(strcmp(s, "") == 0);
+}
+
 int main() {
     printf("[TEST] str\n");
     
     test_str_split();
+    test_str_strip();
 
     printf("[PASS] str\n");
     return 0;
