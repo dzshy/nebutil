@@ -13,13 +13,12 @@ I want to solve LeetCode problems in C, but most open source libraries are bloat
 - Priority queue
 - CRC32
 - Hash Table
+- String utilities
 
 ## TODO
 
 - Linked-list (stack/queue)
 - Vector
-- String
-- Unicode string
 
 ## Build
 
