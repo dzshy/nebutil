@@ -84,18 +84,47 @@ void sb_init(StrBuilder *sb) {
     sb->buf = malloc(sizeof(char) * 17);
 }
 
+static void sb_reserve(StrBuilder *sb, int extra) {
+    if (sb->size + extra <= sb->cap) {
+        return;
+    }
+    int new_cap = (sb->size + extra) * 2;
+    sb->buf = realloc(sb->buf, new_cap + 1);
+    memset(sb->buf + sb->cap, 0, new_cap - sb->cap + 1);
+    sb->cap = new_cap;
+}
+
 void sb_append(StrBuilder *sb, char *format, ...) {
     va_list va1;
     va_list va2;
     va_start(va1, format);
     va_copy(va2, va1);
     int size = vsnprintf(NULL, 0, format, va1);
-    if (sb->size + size > sb->cap) {
-        int new_cap = (sb->size + size) * 2;
-        sb->buf = realloc(sb->buf, new_cap + 1);
-        memset(sb->buf + sb->cap, 0, new_cap - sb->cap + 1);
-        sb->cap = new_cap;
-    }
+    sb_reserve(sb, size);
     vsnprintf(sb->buf + sb->size, sb->cap - sb->size + 1, format, va2);
 }
 
+void sb_appendc(StrBuilder *sb, char c) {
+    sb_reserve(sb, 1);
+    sb->buf[sb->size] = c;
+    sb->size++;
+}
+
+char* fgetline(FILE *fp) {
+    StrBuilder sb;
+    sb_init(&sb);
+    while (true) {
+        int c = fgetc(fp);
+        if (c == EOF && sb.size == 0) return NULL;
+        if (c != EOF) sb_appendc(&sb, c);
+        if (c == EOF || c == '\n') return sb.buf;
+    }
+    return NULL;
+}
+
+int fpeek(FILE *fp) {
+    int c = fgetc(fp);
+    if (c == EOF) return c;
+    ungetc(c, fp);
+    return c;
+}

@@ -98,6 +98,10 @@ void test_str_bulider() {
     sb_append(&sb, "%c1", 'c');
     assert(sb.size == 12);
     assert(strcmp(sb.buf, "hellohelloc1") == 0);
+
+    sb_appendc(&sb, 'x');
+    assert(sb.size == 13);
+    assert(strcmp(sb.buf, "hellohelloc1x") == 0);
 }
 
 int main() {
