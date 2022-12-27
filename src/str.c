@@ -1,9 +1,11 @@
 #include "str.h"
 
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 #include <stddef.h>
 #include <stdbool.h>
+#include <stdarg.h>
 #include <ctype.h>
 
 char** str_split(char *str, char delim) {
@@ -77,5 +79,23 @@ char* str_strip(char *str) {
     return buf;
 }
 
+void sb_init(StrBuilder *sb) {
+    *sb = (StrBuilder){.size = 0, .cap = 16};
+    sb->buf = malloc(sizeof(char) * 17);
+}
 
+void sb_append(StrBuilder *sb, char *format, ...) {
+    va_list va1;
+    va_list va2;
+    va_start(va1, format);
+    va_copy(va2, va1);
+    int size = vsnprintf(NULL, 0, format, va1);
+    if (sb->size + size > sb->cap) {
+        int new_cap = (sb->size + size) * 2;
+        sb->buf = realloc(sb->buf, new_cap + 1);
+        memset(sb->buf + sb->cap, 0, new_cap - sb->cap + 1);
+        sb->cap = new_cap;
+    }
+    vsnprintf(sb->buf + sb->size, sb->cap - sb->size + 1, format, va2);
+}
 

@@ -12,9 +12,7 @@ typedef struct {
 } StrBuilder;
 
 void sb_init(StrBuilder *sb);
-void sb_appends(StrBuilder *sb, char *s);
-void sb_appendc(StrBuilder *sb, char c);
-void sb_appendf(StrBuilder *sb, char *format, ...);
+void sb_append(StrBuilder *sb, char *format, ...);
 
 #endif
 

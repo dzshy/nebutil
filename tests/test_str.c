@@ -82,6 +82,24 @@ void test_str_strip() {
     assert(strcmp(s, "") == 0);
 }
 
+void test_str_bulider() {
+    StrBuilder sb;
+    sb_init(&sb);
+
+    sb_append(&sb, "%s", "hello");
+    assert(sb.size == 5);
+    assert(strcmp(sb.buf, "hello") == 0);
+    assert(strlen(sb.buf) == 5);
+
+    sb_append(&sb, "hello");
+    assert(sb.size == 10);
+    assert(strcmp(sb.buf, "hellohello") == 0);
+
+    sb_append(&sb, "%c1", 'c');
+    assert(sb.size == 12);
+    assert(strcmp(sb.buf, "hellohelloc1") == 0);
+}
+
 int main() {
     printf("[TEST] str\n");
     
