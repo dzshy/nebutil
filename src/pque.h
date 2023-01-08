@@ -4,7 +4,7 @@
  * any purpose with or without fee is hereby granted, provided that the
  * above copyright notice and this permission notice appear in all
  * copies.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL
  * WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE
@@ -23,13 +23,12 @@ typedef struct {
     int elemsz;
     int cap;
     int size;
-    int (*cmp)(void*, void*);
+    int (*cmp)(void *, void *);
 } PQue;
 
-void pq_init(PQue *pq, int cap, int elemsz, int (*cmp)(void*, void*));
+void pq_init(PQue *pq, int cap, int elemsz, int (*cmp)(void *, void *));
 void pq_push(PQue *pq, void *elem);
 void pq_pop(PQue *pq);
-void* pq_top();
+void *pq_top();
 
 #endif
-

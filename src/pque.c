@@ -4,7 +4,7 @@
  * any purpose with or without fee is hereby granted, provided that the
  * above copyright notice and this permission notice appear in all
  * copies.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL
  * WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE
@@ -20,7 +20,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-void pq_init(PQue *pq, int cap, int elem_sz, int (*cmp)(void*, void*)) {
+void pq_init(PQue *pq, int cap, int elem_sz, int (*cmp)(void *, void *))
+{
     pq->cap = cap;
     pq->size = 0;
     pq->elemsz = elem_sz;
@@ -28,39 +29,43 @@ void pq_init(PQue *pq, int cap, int elem_sz, int (*cmp)(void*, void*)) {
     pq->buf = malloc(cap * elem_sz);
 }
 
-static void swap(PQue *pq, int a, int b) {
+static void swap(PQue *pq, int a, int b)
+{
     char buf[pq->elemsz];
     void *tmp = buf;
     int elemsz = pq->elemsz;
-    memcpy(tmp, pq->buf + a*elemsz, elemsz);
-    memcpy(pq->buf + a*elemsz, pq->buf + b*elemsz, elemsz);
-    memcpy(pq->buf + b*elemsz, tmp, elemsz);
+    memcpy(tmp, pq->buf + a * elemsz, elemsz);
+    memcpy(pq->buf + a * elemsz, pq->buf + b * elemsz, elemsz);
+    memcpy(pq->buf + b * elemsz, tmp, elemsz);
 }
 
-static int cmp(PQue *pq, int a, int b) {
-    return pq->cmp(pq->buf + a*pq->elemsz, pq->buf + b*pq->elemsz);
+static int cmp(PQue *pq, int a, int b)
+{
+    return pq->cmp(pq->buf + a * pq->elemsz, pq->buf + b * pq->elemsz);
 }
 
-void pq_push(PQue *pq, void *elem) {
+void pq_push(PQue *pq, void *elem)
+{
     if (pq->size + 1 > pq->cap) {
         pq->buf = realloc(pq->buf, 2 * pq->cap * pq->elemsz);
         pq->cap *= 2;
     }
-    memcpy(pq->buf + pq->size*pq->elemsz, elem, pq->elemsz);
+    memcpy(pq->buf + pq->size * pq->elemsz, elem, pq->elemsz);
     pq->size++;
     if (pq->size == 0) {
         return;
     }
     int i = pq->size - 1;
-    while (i > 0 && cmp(pq, i, i/2) > 0) {
-        swap(pq, i, i/2);
+    while (i > 0 && cmp(pq, i, i / 2) > 0) {
+        swap(pq, i, i / 2);
         i /= 2;
     }
 }
 
-static void heapify(PQue *pq, int idx) {
+static void heapify(PQue *pq, int idx)
+{
     int left, right, largest;
-    left = 2 * idx +1;
+    left = 2 * idx + 1;
     right = 2 * idx + 2;
     if (left < pq->size && cmp(pq, left, idx) > 0) {
         largest = left;
@@ -76,14 +81,18 @@ static void heapify(PQue *pq, int idx) {
     }
 }
 
-void pq_pop(PQue *pq) {
-    if (pq->size == 0) return;
-    memcpy(pq->buf, pq->buf+(pq->size - 1)*pq->elemsz, pq->elemsz);
+void pq_pop(PQue *pq)
+{
+    if (pq->size == 0)
+        return;
+    memcpy(pq->buf, pq->buf + (pq->size - 1) * pq->elemsz, pq->elemsz);
     pq->size -= 1;
     heapify(pq, 0);
 }
 
-void* pq_top(PQue *pq) {
-    if (pq->size == 0) return NULL;
+void *pq_top(PQue *pq)
+{
+    if (pq->size == 0)
+        return NULL;
     return pq->buf;
 }

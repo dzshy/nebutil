@@ -4,7 +4,7 @@
  * any purpose with or without fee is hereby granted, provided that the
  * above copyright notice and this permission notice appear in all
  * copies.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL
  * WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE
@@ -43,34 +43,34 @@
 #include <stdlib.h>
 
 struct rbnode {
-  struct {
-    struct rbnode *rbe_left;
-    struct rbnode *rbe_right;
-    struct rbnode *rbe_parent;
-    int rbe_color;
-  } entry;
-  char content[0];
+    struct {
+        struct rbnode *rbe_left;
+        struct rbnode *rbe_right;
+        struct rbnode *rbe_parent;
+        int rbe_color;
+    } entry;
+    char content[0];
 };
 
 struct rbtree {
-  struct rbnode *rbh_root;
-  int (*cmp)(void *k1, void *k2);
-  void (*augment)(void *elm);
+    struct rbnode *rbh_root;
+    int (*cmp)(void *k1, void *k2);
+    void (*augment)(void *elm);
 };
 
 typedef struct rbnode RbNode;
 typedef struct rbtree RbTree;
 
-void rbtree_remove(struct rbtree *, void* iter);
+void rbtree_remove(struct rbtree *, void *iter);
 
 // return a iterator
-void* rbtree_insert(struct rbtree *, void *treenode);
-void* rbtree_find(struct rbtree *, void *val);
-void* rbtree_next(struct rbtree *, void* iter);
-void* rbtree_min(struct rbtree *);
-void* rbtree_max(struct rbtree *);
-void* rbtree_left(void *node);
-void* rbtree_right(void *node);
-void* rbtree_parent(void *node);
+void *rbtree_insert(struct rbtree *, void *treenode);
+void *rbtree_find(struct rbtree *, void *val);
+void *rbtree_next(struct rbtree *, void *iter);
+void *rbtree_min(struct rbtree *);
+void *rbtree_max(struct rbtree *);
+void *rbtree_left(void *node);
+void *rbtree_right(void *node);
+void *rbtree_parent(void *node);
 
-void rbtree_free(struct rbtree *, void (*free_cb)(void*));
+void rbtree_free(struct rbtree *, void (*free_cb)(void *));

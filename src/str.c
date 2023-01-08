@@ -4,7 +4,7 @@
  * any purpose with or without fee is hereby granted, provided that the
  * above copyright notice and this permission notice appear in all
  * copies.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL
  * WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE
@@ -17,20 +17,22 @@
 
 #include "str.h"
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <stddef.h>
-#include <stdbool.h>
-#include <stdarg.h>
 #include <ctype.h>
+#include <stdarg.h>
+#include <stdbool.h>
+#include <stddef.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-char** str_split(char *str, char delim) {
+char **str_split(char *str, char delim)
+{
     char **ret;
 
-    if (str == NULL) return NULL;
+    if (str == NULL)
+        return NULL;
     if (*str == '\n') {
-        ret = malloc(sizeof(char*));
+        ret = malloc(sizeof(char *));
         *ret = NULL;
         return ret;
     }
@@ -41,17 +43,19 @@ char** str_split(char *str, char delim) {
             continue;
         }
         int size = p - begin;
-        if (size > 0) count++;
+        if (size > 0)
+            count++;
     }
     count++;
-    ret = malloc((count + 1) * sizeof(char*));
-    memset(ret, 0, (count + 1) * sizeof(char*));
+    ret = malloc((count + 1) * sizeof(char *));
+    memset(ret, 0, (count + 1) * sizeof(char *));
 
     begin = str;
     int i = 0;
     bool finished = false;
     for (char *p = str; !finished; p++) {
-        if (*p == '\0') finished = true;
+        if (*p == '\0')
+            finished = true;
         if (*p != delim && *p != '\0' && !(delim == '\0' && isspace(*p))) {
             continue;
         }
@@ -70,7 +74,8 @@ char** str_split(char *str, char delim) {
     return ret;
 }
 
-void str_list_free(char **list) {
+void str_list_free(char **list)
+{
     char **p = list;
     while (*p != NULL) {
         free(*p);
@@ -79,7 +84,8 @@ void str_list_free(char **list) {
     free(list);
 }
 
-char* str_strip(char *str) {
+char *str_strip(char *str)
+{
     int len = strlen(str);
     char *begin = str;
     char *end = str + len - 1;
@@ -96,12 +102,14 @@ char* str_strip(char *str) {
     return buf;
 }
 
-void sb_init(StrBuilder *sb) {
+void sb_init(StrBuilder *sb)
+{
     *sb = (StrBuilder){.size = 0, .cap = 16};
     sb->buf = malloc(sizeof(char) * 17);
 }
 
-static void sb_reserve(StrBuilder *sb, int extra) {
+static void sb_reserve(StrBuilder *sb, int extra)
+{
     if (sb->size + extra <= sb->cap) {
         return;
     }
@@ -111,7 +119,8 @@ static void sb_reserve(StrBuilder *sb, int extra) {
     sb->cap = new_cap;
 }
 
-void sb_append(StrBuilder *sb, char *format, ...) {
+void sb_append(StrBuilder *sb, char *format, ...)
+{
     va_list va1;
     va_list va2;
     va_start(va1, format);
@@ -121,27 +130,34 @@ void sb_append(StrBuilder *sb, char *format, ...) {
     vsnprintf(sb->buf + sb->size, sb->cap - sb->size + 1, format, va2);
 }
 
-void sb_appendc(StrBuilder *sb, char c) {
+void sb_appendc(StrBuilder *sb, char c)
+{
     sb_reserve(sb, 1);
     sb->buf[sb->size] = c;
     sb->size++;
 }
 
-char* fgetline(FILE *fp) {
+char *fgetline(FILE *fp)
+{
     StrBuilder sb;
     sb_init(&sb);
     while (true) {
         int c = fgetc(fp);
-        if (c == EOF && sb.size == 0) return NULL;
-        if (c != EOF) sb_appendc(&sb, c);
-        if (c == EOF || c == '\n') return sb.buf;
+        if (c == EOF && sb.size == 0)
+            return NULL;
+        if (c != EOF)
+            sb_appendc(&sb, c);
+        if (c == EOF || c == '\n')
+            return sb.buf;
     }
     return NULL;
 }
 
-int fpeek(FILE *fp) {
+int fpeek(FILE *fp)
+{
     int c = fgetc(fp);
-    if (c == EOF) return c;
+    if (c == EOF)
+        return c;
     ungetc(c, fp);
     return c;
 }

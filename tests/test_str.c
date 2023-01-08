@@ -4,7 +4,7 @@
  * any purpose with or without fee is hereby granted, provided that the
  * above copyright notice and this permission notice appear in all
  * copies.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL
  * WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE
@@ -16,13 +16,14 @@
  */
 
 #include <assert.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdio.h>
 
 #include <str.h>
 
-void test_str_split() {
+void test_str_split()
+{
     char *s = "abc 123 233 xyz";
     char **list = str_split(s, ' ');
     assert(list[4] == NULL);
@@ -71,10 +72,10 @@ void test_str_split() {
     list = str_split(s, ' ');
     assert(list[0] == NULL);
     str_list_free(list);
-
 }
 
-void test_str_strip() {
+void test_str_strip()
+{
     char *s;
 
     s = str_strip("hello ");
@@ -99,7 +100,8 @@ void test_str_strip() {
     assert(strcmp(s, "") == 0);
 }
 
-void test_str_bulider() {
+void test_str_bulider()
+{
     StrBuilder sb;
     sb_init(&sb);
 
@@ -121,9 +123,10 @@ void test_str_bulider() {
     assert(strcmp(sb.buf, "hellohelloc1x") == 0);
 }
 
-int main() {
+int main()
+{
     printf("[TEST] str\n");
-    
+
     test_str_split();
     test_str_strip();
 

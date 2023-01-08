@@ -4,7 +4,7 @@
  * any purpose with or without fee is hereby granted, provided that the
  * above copyright notice and this permission notice appear in all
  * copies.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL
  * WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE
@@ -15,21 +15,25 @@
  * PERFORMANCE OF THIS SOFTWARE.
  */
 
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <assert.h>
 
 #include "pque.h"
 
-int intcmp(void *_a, void *_b) {
-    int a = *(int*)_a;
-    int b = *(int*)_b;
-    if (a < b) return 1;
-    if (a > b) return -1;
+int intcmp(void *_a, void *_b)
+{
+    int a = *(int *)_a;
+    int b = *(int *)_b;
+    if (a < b)
+        return 1;
+    if (a > b)
+        return -1;
     return 0;
 }
 
-int main() {
+int main()
+{
     printf("[TEST] pque\n");
     PQue pq;
     pq_init(&pq, 3, sizeof(int), intcmp);

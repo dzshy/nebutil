@@ -4,7 +4,7 @@
  * any purpose with or without fee is hereby granted, provided that the
  * above copyright notice and this permission notice appear in all
  * copies.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL
  * WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE
@@ -16,27 +16,27 @@
  */
 
 #include <assert.h>
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "crc32.h"
 #include "htable.h"
 
-static uint32_t hash(void *i) {
-    return crc32(0, i, sizeof(int));
-}
+static uint32_t hash(void *i) { return crc32(0, i, sizeof(int)); }
 
-static bool eq(void *x, void *y) {
+static bool eq(void *x, void *y)
+{
     int *a = x, *b = y;
     return *a == *b;
 }
 
 bool found[10000];
 
-int main() {
+int main()
+{
     printf("[TEST] htable\n");
-    
+
     HTable ht;
     htable_init(&ht, sizeof(int), -1, hash, eq);
     for (int i = 0; i < 10000; i++) {
@@ -47,9 +47,9 @@ int main() {
     }
 
     for (int i = 0; i < 10000; i++) {
-        assert(htable_find(&ht, &i) != NULL); 
+        assert(htable_find(&ht, &i) != NULL);
         int t = 10000 + i;
-        assert(htable_find(&ht, &t) == NULL); 
+        assert(htable_find(&ht, &t) == NULL);
     }
 
     memset(found, 0, sizeof(bool) * 10000);
@@ -61,21 +61,21 @@ int main() {
     for (int i = 0; i < 10000; i++) {
         assert(found[i]);
     }
-    
+
     for (int i = 0; i < 5000; i++) {
         int *iter = htable_find(&ht, &i);
         htable_del(&ht, iter);
     }
     for (int i = 0; i < 5000; i++) {
-        assert(htable_find(&ht, &i) == NULL); 
+        assert(htable_find(&ht, &i) == NULL);
         int t = 5000 + i;
-        assert(htable_find(&ht, &t) != NULL); 
+        assert(htable_find(&ht, &t) != NULL);
     }
-    
+
     for (int i = 0; i < 5000; i++) {
         htable_insert(&ht, &i);
     }
-    
+
     memset(found, 0, sizeof(bool) * 10000);
     iter = htable_begin(&ht);
     while (iter != NULL) {
@@ -88,4 +88,3 @@ int main() {
 
     printf("[PASS] htable\n");
 }
-

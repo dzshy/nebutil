@@ -4,7 +4,7 @@
  * any purpose with or without fee is hereby granted, provided that the
  * above copyright notice and this permission notice appear in all
  * copies.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL
  * WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE
@@ -15,8 +15,8 @@
  * PERFORMANCE OF THIS SOFTWARE.
  */
 
-#include <stdio.h>
 #include <assert.h>
+#include <stdio.h>
 #include <string.h>
 #include <time.h>
 
@@ -29,12 +29,14 @@ typedef struct {
     int amount;
 } IntIntEntry;
 
-static int cmpfunc(void *x, void *y) {
+static int cmpfunc(void *x, void *y)
+{
     int *a = x, *b = y;
-    return *a < *b ?  -1 : *a > *b;
+    return *a < *b ? -1 : *a > *b;
 }
 
-static void augment(void *n) {
+static void augment(void *n)
+{
     IntIntEntry *node = n;
     IntIntEntry *left = rbtree_left(node);
     IntIntEntry *right = rbtree_right(node);
@@ -45,18 +47,20 @@ static void augment(void *n) {
 
 static void test_largedata();
 
-static int max(int a, int b) {
-    return a > b ? a : b;
-}
+static int max(int a, int b) { return a > b ? a : b; }
 
-int depth(void *n) {
+int depth(void *n)
+{
     RbNode *node = n;
-    if (node == NULL) return 0;
+    if (node == NULL)
+        return 0;
     return max(depth(node->entry.rbe_left), depth(node->entry.rbe_right)) + 1;
 }
 
-void checkaugment(IntIntEntry *node) {
-    if (node == NULL) return;
+void checkaugment(IntIntEntry *node)
+{
+    if (node == NULL)
+        return;
     IntIntEntry *left = rbtree_left(node);
     IntIntEntry *right = rbtree_right(node);
     int amount = 1;
@@ -67,7 +71,8 @@ void checkaugment(IntIntEntry *node) {
     checkaugment(right);
 }
 
-int main() {
+int main()
+{
     printf("[TEST] augment rbtree\n");
     test_largedata();
     printf("[PASS] augment rbtree\n");
@@ -77,8 +82,9 @@ int main() {
 #define TESTSZ 10000
 int input[TESTSZ];
 
-void shuffle(int *input, int n) {
-    for (int i = n-1; i > 0; i--) {
+void shuffle(int *input, int n)
+{
+    for (int i = n - 1; i > 0; i--) {
         int j = rand() % i;
         int tmp = input[i];
         input[i] = input[j];
@@ -86,10 +92,11 @@ void shuffle(int *input, int n) {
     }
 }
 
-static void test_largedata() {
+static void test_largedata()
+{
     // generate random input
     time_t t;
-    srand((unsigned) time(&t));
+    srand((unsigned)time(&t));
     for (int i = 0; i < TESTSZ; i++) {
         input[i] = i;
     }
@@ -97,7 +104,7 @@ static void test_largedata() {
     // insert
     RbTree tree = {NULL, cmpfunc, augment};
     IntIntEntry *n;
-    for (int i = 0; i < TESTSZ; i ++) {
+    for (int i = 0; i < TESTSZ; i++) {
         n = malloc(sizeof(*n));
         n->key = input[i];
         n->value = input[i];
@@ -107,7 +114,7 @@ static void test_largedata() {
     // check tree validity
     int d = depth(tree.rbh_root);
     assert(d >= 13 && d <= 28);
-    IntIntEntry *root = (IntIntEntry*)(tree.rbh_root);
+    IntIntEntry *root = (IntIntEntry *)(tree.rbh_root);
     assert(root->amount == TESTSZ);
     checkaugment(root);
     IntIntEntry *iter = rbtree_min(&tree);
@@ -136,13 +143,13 @@ static void test_largedata() {
     // check tree validity
     d = depth(tree.rbh_root);
     assert(d >= 11 && d <= 24);
-    root = (IntIntEntry*)(tree.rbh_root);
+    root = (IntIntEntry *)(tree.rbh_root);
     assert(root->amount == TESTSZ - count);
     checkaugment(root);
     iter = rbtree_min(&tree);
     i = 0;
     for (; iter != NULL; iter = rbtree_next(&tree, iter)) {
-        assert(iter->key == i*3);
+        assert(iter->key == i * 3);
         i++;
     }
 }

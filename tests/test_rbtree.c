@@ -4,7 +4,7 @@
  * any purpose with or without fee is hereby granted, provided that the
  * above copyright notice and this permission notice appear in all
  * copies.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL
  * WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE
@@ -15,8 +15,8 @@
  * PERFORMANCE OF THIS SOFTWARE.
  */
 
-#include <stdio.h>
 #include <assert.h>
+#include <stdio.h>
 #include <string.h>
 #include <time.h>
 
@@ -28,38 +28,40 @@ typedef struct {
     int value;
 } IntIntEntry;
 
-static int cmpfunc(void *x, void *y) {
+static int cmpfunc(void *x, void *y)
+{
     int *a = x, *b = y;
-    return *a < *b ?  -1 : *a > *b;
+    return *a < *b ? -1 : *a > *b;
 }
 
 static void test_largedata();
 
-static int max(int a, int b) {
-    return a > b ? a : b;
-}
+static int max(int a, int b) { return a > b ? a : b; }
 
-int depth(void *n) {
+int depth(void *n)
+{
     RbNode *node = n;
-    if (node == NULL) return 0;
+    if (node == NULL)
+        return 0;
     return max(depth(node->entry.rbe_left), depth(node->entry.rbe_right)) + 1;
 }
 
-int main() {
+int main()
+{
     printf("[TEST] rbtree\n");
     RbTree tree = {NULL, cmpfunc, NULL};
     IntIntEntry *n;
 
     int a[5] = {1, 2, 3, 4, 5};
-    for (int i = 0; i < 5; i ++) {
+    for (int i = 0; i < 5; i++) {
         n = malloc(sizeof(*n));
         n->key = a[i];
         n->value = i;
         rbtree_insert(&tree, n);
     }
 
-    int find = 3; 
-    IntIntEntry* iter;
+    int find = 3;
+    IntIntEntry *iter;
     iter = rbtree_find(&tree, &find);
     assert(iter->key == 3);
 
@@ -83,8 +85,9 @@ int main() {
 #define TESTSZ 10000
 int input[TESTSZ];
 
-void shuffle(int *input, int n) {
-    for (int i = n-1; i > 0; i--) {
+void shuffle(int *input, int n)
+{
+    for (int i = n - 1; i > 0; i--) {
         int j = rand() % i;
         int tmp = input[i];
         input[i] = input[j];
@@ -92,10 +95,11 @@ void shuffle(int *input, int n) {
     }
 }
 
-static void test_largedata() {
+static void test_largedata()
+{
     // generate random input
     time_t t;
-    srand((unsigned) time(&t));
+    srand((unsigned)time(&t));
     for (int i = 0; i < TESTSZ; i++) {
         input[i] = i;
     }
@@ -103,7 +107,7 @@ static void test_largedata() {
     // insert
     RbTree tree = {NULL, cmpfunc, NULL};
     IntIntEntry *n;
-    for (int i = 0; i < TESTSZ; i ++) {
+    for (int i = 0; i < TESTSZ; i++) {
         n = malloc(sizeof(*n));
         n->key = input[i];
         n->value = input[i];
@@ -141,7 +145,7 @@ static void test_largedata() {
     iter = rbtree_min(&tree);
     i = 0;
     for (; iter != NULL; iter = rbtree_next(&tree, iter)) {
-        assert(iter->key == i*3);
+        assert(iter->key == i * 3);
         i++;
     }
 }

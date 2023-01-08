@@ -4,7 +4,7 @@
  * any purpose with or without fee is hereby granted, provided that the
  * above copyright notice and this permission notice appear in all
  * copies.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL
  * WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE
@@ -42,42 +42,47 @@
 
 #include "rbtree.h"
 
-#define RED   1
+#define RED 1
 #define BLACK 0
 
 static struct rbnode *rbtree_minmax(struct rbtree *, int);
-void* rbtree_min(struct rbtree *head) {
-    return rbtree_minmax(head, -1);
-}
-void* rbtree_max(struct rbtree *head) {
-    return rbtree_minmax(head, 1);
-}
+void *rbtree_min(struct rbtree *head) { return rbtree_minmax(head, -1); }
+void *rbtree_max(struct rbtree *head) { return rbtree_minmax(head, 1); }
 
-void* rbtree_left(void *node) {
+void *rbtree_left(void *node)
+{
     struct rbnode *elm = node;
-    if (node == NULL) return NULL;
+    if (node == NULL)
+        return NULL;
     return elm->entry.rbe_left;
 }
-void* rbtree_right(void *node) {
+void *rbtree_right(void *node)
+{
     struct rbnode *elm = node;
-    if (node == NULL) return NULL;
+    if (node == NULL)
+        return NULL;
     return elm->entry.rbe_right;
 }
-void* rbtree_parent(void *node) {
+void *rbtree_parent(void *node)
+{
     struct rbnode *elm = node;
-    if (node == NULL) return NULL;
+    if (node == NULL)
+        return NULL;
     return elm->entry.rbe_parent;
 }
 
-static void augment(struct rbtree * head, struct rbnode *elm) {
-    if (head->augment != NULL) head->augment(elm);
+static void augment(struct rbtree *head, struct rbnode *elm)
+{
+    if (head->augment != NULL)
+        head->augment(elm);
 }
 
 static void rbtree_insert_color(struct rbtree *head, struct rbnode *elm);
 static void rbtree_remove_color(struct rbtree *head, struct rbnode *parent,
                                 struct rbnode *elm);
 
-static void rotate_left(struct rbtree *head, struct rbnode *elm) {
+static void rotate_left(struct rbtree *head, struct rbnode *elm)
+{
     struct rbnode *tmp = elm->entry.rbe_right;
     if ((elm->entry.rbe_right = tmp->entry.rbe_left)) {
         tmp->entry.rbe_left->entry.rbe_parent = elm;
@@ -85,9 +90,9 @@ static void rotate_left(struct rbtree *head, struct rbnode *elm) {
     augment(head, elm);
     if ((tmp->entry.rbe_parent = elm->entry.rbe_parent)) {
         if (elm == elm->entry.rbe_parent->entry.rbe_left)
-          elm->entry.rbe_parent->entry.rbe_left = tmp;
+            elm->entry.rbe_parent->entry.rbe_left = tmp;
         else
-          elm->entry.rbe_parent->entry.rbe_right = tmp;
+            elm->entry.rbe_parent->entry.rbe_right = tmp;
     } else {
         head->rbh_root = tmp;
     }
@@ -99,7 +104,8 @@ static void rotate_left(struct rbtree *head, struct rbnode *elm) {
     }
 }
 
-static void rotate_right(struct rbtree *head, struct rbnode *elm) {
+static void rotate_right(struct rbtree *head, struct rbnode *elm)
+{
     struct rbnode *tmp = elm->entry.rbe_left;
     if ((elm->entry.rbe_left = tmp->entry.rbe_right)) {
         tmp->entry.rbe_right->entry.rbe_parent = elm;
@@ -107,9 +113,9 @@ static void rotate_right(struct rbtree *head, struct rbnode *elm) {
     augment(head, elm);
     if ((tmp->entry.rbe_parent = elm->entry.rbe_parent)) {
         if (elm == elm->entry.rbe_parent->entry.rbe_left)
-          elm->entry.rbe_parent->entry.rbe_left = tmp;
+            elm->entry.rbe_parent->entry.rbe_left = tmp;
         else
-          elm->entry.rbe_parent->entry.rbe_right = tmp;
+            elm->entry.rbe_parent->entry.rbe_right = tmp;
     } else {
         head->rbh_root = tmp;
     }
@@ -121,292 +127,304 @@ static void rotate_right(struct rbtree *head, struct rbnode *elm) {
     }
 }
 
-static void rbtree_insert_color(struct rbtree *head, struct rbnode *elm) {
-  struct rbnode *parent, *gparent, *tmp;
-  while ((parent = elm->entry.rbe_parent) && parent->entry.rbe_color == 1) {
-    gparent = parent->entry.rbe_parent;
-    if (parent == gparent->entry.rbe_left) {
-      tmp = gparent->entry.rbe_right;
-      if (tmp && tmp->entry.rbe_color == 1) {
-        tmp->entry.rbe_color = BLACK;
-        parent->entry.rbe_color = BLACK;
-        gparent->entry.rbe_color = RED;
-        elm = gparent;
-        continue;
-      }
-      if (parent->entry.rbe_right == elm) {
-        rotate_left(head, parent);
-        tmp = parent;
-        parent = elm;
-        elm = tmp;
-      }
-      parent->entry.rbe_color = BLACK;
-      gparent->entry.rbe_color = RED;
-      rotate_right(head, gparent);
-    } else {
-      tmp = gparent->entry.rbe_left;
-      if (tmp && tmp->entry.rbe_color == 1) {
-        tmp->entry.rbe_color = BLACK;
-        parent->entry.rbe_color = BLACK;
-        gparent->entry.rbe_color = RED;;
-        elm = gparent;
-        continue;
-      }
-      if (parent->entry.rbe_left == elm) {
-        rotate_right(head, parent);
-        tmp = parent;
-        parent = elm;
-        elm = tmp;
-      }
-      parent->entry.rbe_color = BLACK;
-      gparent->entry.rbe_color = RED;
-      rotate_left(head, gparent);
+static void rbtree_insert_color(struct rbtree *head, struct rbnode *elm)
+{
+    struct rbnode *parent, *gparent, *tmp;
+    while ((parent = elm->entry.rbe_parent) && parent->entry.rbe_color == 1) {
+        gparent = parent->entry.rbe_parent;
+        if (parent == gparent->entry.rbe_left) {
+            tmp = gparent->entry.rbe_right;
+            if (tmp && tmp->entry.rbe_color == 1) {
+                tmp->entry.rbe_color = BLACK;
+                parent->entry.rbe_color = BLACK;
+                gparent->entry.rbe_color = RED;
+                elm = gparent;
+                continue;
+            }
+            if (parent->entry.rbe_right == elm) {
+                rotate_left(head, parent);
+                tmp = parent;
+                parent = elm;
+                elm = tmp;
+            }
+            parent->entry.rbe_color = BLACK;
+            gparent->entry.rbe_color = RED;
+            rotate_right(head, gparent);
+        } else {
+            tmp = gparent->entry.rbe_left;
+            if (tmp && tmp->entry.rbe_color == 1) {
+                tmp->entry.rbe_color = BLACK;
+                parent->entry.rbe_color = BLACK;
+                gparent->entry.rbe_color = RED;
+                ;
+                elm = gparent;
+                continue;
+            }
+            if (parent->entry.rbe_left == elm) {
+                rotate_right(head, parent);
+                tmp = parent;
+                parent = elm;
+                elm = tmp;
+            }
+            parent->entry.rbe_color = BLACK;
+            gparent->entry.rbe_color = RED;
+            rotate_left(head, gparent);
+        }
     }
-  }
-  head->rbh_root->entry.rbe_color = BLACK;
+    head->rbh_root->entry.rbe_color = BLACK;
 }
 
 static void rbtree_remove_color(struct rbtree *head, struct rbnode *parent,
-                            struct rbnode *elm) {
-  struct rbnode *tmp;
-  while ((elm == NULL || elm->entry.rbe_color == 0) &&
-         elm != head->rbh_root) {
-    if (parent->entry.rbe_left == elm) {
-      tmp = parent->entry.rbe_right;
-      if (tmp->entry.rbe_color == 1) {
-        tmp->entry.rbe_color = BLACK;
-        parent->entry.rbe_color = RED;
-        rotate_left(head, parent);
-        tmp = parent->entry.rbe_right;
-      }
-      if ((tmp->entry.rbe_left == NULL ||
-           tmp->entry.rbe_left->entry.rbe_color == 0) &&
-          (tmp->entry.rbe_right == NULL ||
-           tmp->entry.rbe_right->entry.rbe_color == 0)) {
-        tmp->entry.rbe_color = RED;
-        elm = parent;
-        parent = elm->entry.rbe_parent;
-      } else {
-        if (tmp->entry.rbe_right == NULL ||
-            tmp->entry.rbe_right->entry.rbe_color == 0) {
-          struct rbnode *oleft;
-          if ((oleft = tmp->entry.rbe_left))
-            oleft->entry.rbe_color = BLACK;
-          tmp->entry.rbe_color = RED;
-          rotate_right(head, tmp);
-          tmp = parent->entry.rbe_right;
+                                struct rbnode *elm)
+{
+    struct rbnode *tmp;
+    while ((elm == NULL || elm->entry.rbe_color == 0) &&
+           elm != head->rbh_root) {
+        if (parent->entry.rbe_left == elm) {
+            tmp = parent->entry.rbe_right;
+            if (tmp->entry.rbe_color == 1) {
+                tmp->entry.rbe_color = BLACK;
+                parent->entry.rbe_color = RED;
+                rotate_left(head, parent);
+                tmp = parent->entry.rbe_right;
+            }
+            if ((tmp->entry.rbe_left == NULL ||
+                 tmp->entry.rbe_left->entry.rbe_color == 0) &&
+                (tmp->entry.rbe_right == NULL ||
+                 tmp->entry.rbe_right->entry.rbe_color == 0)) {
+                tmp->entry.rbe_color = RED;
+                elm = parent;
+                parent = elm->entry.rbe_parent;
+            } else {
+                if (tmp->entry.rbe_right == NULL ||
+                    tmp->entry.rbe_right->entry.rbe_color == 0) {
+                    struct rbnode *oleft;
+                    if ((oleft = tmp->entry.rbe_left))
+                        oleft->entry.rbe_color = BLACK;
+                    tmp->entry.rbe_color = RED;
+                    rotate_right(head, tmp);
+                    tmp = parent->entry.rbe_right;
+                }
+                tmp->entry.rbe_color = parent->entry.rbe_color;
+                parent->entry.rbe_color = BLACK;
+                if (tmp->entry.rbe_right)
+                    tmp->entry.rbe_right->entry.rbe_color = BLACK;
+                rotate_left(head, parent);
+                elm = head->rbh_root;
+                break;
+            }
+        } else {
+            tmp = parent->entry.rbe_left;
+            if (tmp->entry.rbe_color == 1) {
+                tmp->entry.rbe_color = BLACK;
+                parent->entry.rbe_color = RED;
+                rotate_right(head, parent);
+                tmp = parent->entry.rbe_left;
+            }
+            if ((tmp->entry.rbe_left == NULL ||
+                 tmp->entry.rbe_left->entry.rbe_color == 0) &&
+                (tmp->entry.rbe_right == NULL ||
+                 tmp->entry.rbe_right->entry.rbe_color == 0)) {
+                tmp->entry.rbe_color = RED;
+                elm = parent;
+                parent = elm->entry.rbe_parent;
+            } else {
+                if (tmp->entry.rbe_left == NULL ||
+                    tmp->entry.rbe_left->entry.rbe_color == 0) {
+                    struct rbnode *oright;
+                    if ((oright = tmp->entry.rbe_right))
+                        oright->entry.rbe_color = BLACK;
+                    tmp->entry.rbe_color = RED;
+                    rotate_left(head, tmp);
+                    tmp = parent->entry.rbe_left;
+                }
+                tmp->entry.rbe_color = parent->entry.rbe_color;
+                parent->entry.rbe_color = BLACK;
+                if (tmp->entry.rbe_left)
+                    tmp->entry.rbe_left->entry.rbe_color = BLACK;
+                rotate_right(head, parent);
+                elm = head->rbh_root;
+                break;
+            }
         }
-        tmp->entry.rbe_color = parent->entry.rbe_color;
-        parent->entry.rbe_color = BLACK;
-        if (tmp->entry.rbe_right)
-          tmp->entry.rbe_right->entry.rbe_color = BLACK;
-        rotate_left(head, parent);
-        elm = head->rbh_root;
-        break;
-      }
-    } else {
-      tmp = parent->entry.rbe_left;
-      if (tmp->entry.rbe_color == 1) {
-        tmp->entry.rbe_color = BLACK;
-        parent->entry.rbe_color = RED;
-        rotate_right(head, parent);
-        tmp = parent->entry.rbe_left;
-      }
-      if ((tmp->entry.rbe_left == NULL ||
-           tmp->entry.rbe_left->entry.rbe_color == 0) &&
-          (tmp->entry.rbe_right == NULL ||
-           tmp->entry.rbe_right->entry.rbe_color == 0)) {
-        tmp->entry.rbe_color = RED;
-        elm = parent;
-        parent = elm->entry.rbe_parent;
-      } else {
-        if (tmp->entry.rbe_left == NULL ||
-            tmp->entry.rbe_left->entry.rbe_color == 0) {
-          struct rbnode *oright;
-          if ((oright = tmp->entry.rbe_right))
-            oright->entry.rbe_color = BLACK;
-          tmp->entry.rbe_color = RED;
-          rotate_left(head, tmp);
-          tmp = parent->entry.rbe_left;
-        }
-        tmp->entry.rbe_color = parent->entry.rbe_color;
-        parent->entry.rbe_color = BLACK;
-        if (tmp->entry.rbe_left)
-          tmp->entry.rbe_left->entry.rbe_color = BLACK;
-        rotate_right(head, parent);
-        elm = head->rbh_root;
-        break;
-      }
     }
-  }
-  if (elm)
-    elm->entry.rbe_color = BLACK;
+    if (elm)
+        elm->entry.rbe_color = BLACK;
 }
 
-void rbtree_remove(struct rbtree *head, void* elmv) {
-  struct rbnode *elm = elmv;
-  struct rbnode *child, *parent;
-  int color;
-  if (elm->entry.rbe_left == NULL)
-    child = elm->entry.rbe_right;
-  else if (elm->entry.rbe_right == NULL)
-    child = elm->entry.rbe_left;
-  else {
-    struct rbnode *old = elm, *left;
-    elm = elm->entry.rbe_right;
-    while ((left = elm->entry.rbe_left))
-      elm = left;
-    child = elm->entry.rbe_right;
+void rbtree_remove(struct rbtree *head, void *elmv)
+{
+    struct rbnode *elm = elmv;
+    struct rbnode *child, *parent;
+    int color;
+    if (elm->entry.rbe_left == NULL)
+        child = elm->entry.rbe_right;
+    else if (elm->entry.rbe_right == NULL)
+        child = elm->entry.rbe_left;
+    else {
+        struct rbnode *old = elm, *left;
+        elm = elm->entry.rbe_right;
+        while ((left = elm->entry.rbe_left))
+            elm = left;
+        child = elm->entry.rbe_right;
+        parent = elm->entry.rbe_parent;
+        color = elm->entry.rbe_color;
+        if (child)
+            child->entry.rbe_parent = parent;
+        if (parent) {
+            if (parent->entry.rbe_left == elm)
+                parent->entry.rbe_left = child;
+            else
+                parent->entry.rbe_right = child;
+            augment(head, parent);
+        } else
+            head->rbh_root = child;
+        if (elm->entry.rbe_parent == old)
+            parent = elm;
+        elm->entry = old->entry;
+        if (old->entry.rbe_parent) {
+            if ((old->entry.rbe_parent)->entry.rbe_left == old)
+                (old->entry.rbe_parent)->entry.rbe_left = elm;
+            else
+                (old->entry.rbe_parent)->entry.rbe_right = elm;
+            augment(head, old->entry.rbe_parent);
+        } else
+            head->rbh_root = elm;
+        old->entry.rbe_left->entry.rbe_parent = elm;
+        if (old->entry.rbe_right)
+            old->entry.rbe_right->entry.rbe_parent = elm;
+        if (parent) {
+            left = parent;
+            if (head->augment != NULL) {
+                do {
+                    augment(head, left);
+                } while ((left = left->entry.rbe_parent));
+            }
+        }
+        goto color;
+    }
     parent = elm->entry.rbe_parent;
     color = elm->entry.rbe_color;
     if (child)
-      child->entry.rbe_parent = parent;
+        child->entry.rbe_parent = parent;
     if (parent) {
-      if (parent->entry.rbe_left == elm)
-        parent->entry.rbe_left = child;
-      else
-        parent->entry.rbe_right = child;
-      augment(head, parent);
+        if (parent->entry.rbe_left == elm)
+            parent->entry.rbe_left = child;
+        else
+            parent->entry.rbe_right = child;
+        struct rbnode *goback = parent;
+        if (head->augment != NULL) {
+            do {
+                augment(head, goback);
+            } while ((goback = goback->entry.rbe_parent));
+        }
     } else
-      head->rbh_root = child;
-    if (elm->entry.rbe_parent == old)
-      parent = elm;
-    elm->entry = old->entry;
-    if (old->entry.rbe_parent) {
-      if ((old->entry.rbe_parent)->entry.rbe_left == old)
-        (old->entry.rbe_parent)->entry.rbe_left = elm;
-      else
-        (old->entry.rbe_parent)->entry.rbe_right = elm;
-      augment(head, old->entry.rbe_parent);
-    } else
-      head->rbh_root = elm;
-    old->entry.rbe_left->entry.rbe_parent = elm;
-    if (old->entry.rbe_right)
-      old->entry.rbe_right->entry.rbe_parent = elm;
-    if (parent) {
-      left = parent;
-      if (head->augment != NULL) {
-          do {
-              augment(head, left);
-          } while ((left = left->entry.rbe_parent));
-      }
-    }
-    goto color;
-  }
-  parent = elm->entry.rbe_parent;
-  color = elm->entry.rbe_color;
-  if (child)
-    child->entry.rbe_parent = parent;
-  if (parent) {
-    if (parent->entry.rbe_left == elm)
-      parent->entry.rbe_left = child;
-    else
-      parent->entry.rbe_right = child;
-    struct rbnode* goback = parent;
-    if (head->augment != NULL) {
-        do {
-            augment(head, goback);
-        } while ((goback = goback->entry.rbe_parent));
-    }
-  } else
-    head->rbh_root = child;
+        head->rbh_root = child;
 color:
-  if (color == 0)
-    rbtree_remove_color(head, parent, child);
+    if (color == 0)
+        rbtree_remove_color(head, parent, child);
 }
 
-void* rbtree_insert(struct rbtree *head, void *elmv) {
-  struct rbnode *elm = elmv;
-  struct rbnode *tmp;
-  struct rbnode *parent = NULL;
-  int comp = 0;
-  tmp = head->rbh_root;
-  while (tmp) {
-    parent = tmp;
-    comp = head->cmp((void*)elm->content, (void*)parent->content);
-    if (comp < 0)
-      tmp = tmp->entry.rbe_left;
-    else if (comp > 0)
-      tmp = tmp->entry.rbe_right;
-    else
-      return tmp;
-  }
-  elm->entry.rbe_parent = parent;
-  elm->entry.rbe_left = elm->entry.rbe_right = NULL;
-  elm->entry.rbe_color = RED;
-  if (parent != NULL) {
-    if (comp < 0)
-      parent->entry.rbe_left = elm;
-    else
-      parent->entry.rbe_right = elm;
-    struct rbnode* goback = parent;
-    if (head->augment != NULL) {
-        do {
-            augment(head, goback);
-        } while ((goback = goback->entry.rbe_parent));
+void *rbtree_insert(struct rbtree *head, void *elmv)
+{
+    struct rbnode *elm = elmv;
+    struct rbnode *tmp;
+    struct rbnode *parent = NULL;
+    int comp = 0;
+    tmp = head->rbh_root;
+    while (tmp) {
+        parent = tmp;
+        comp = head->cmp((void *)elm->content, (void *)parent->content);
+        if (comp < 0)
+            tmp = tmp->entry.rbe_left;
+        else if (comp > 0)
+            tmp = tmp->entry.rbe_right;
+        else
+            return tmp;
     }
-  } else
-    head->rbh_root = elm;
-  rbtree_insert_color(head, elm);
-  return (NULL);
+    elm->entry.rbe_parent = parent;
+    elm->entry.rbe_left = elm->entry.rbe_right = NULL;
+    elm->entry.rbe_color = RED;
+    if (parent != NULL) {
+        if (comp < 0)
+            parent->entry.rbe_left = elm;
+        else
+            parent->entry.rbe_right = elm;
+        struct rbnode *goback = parent;
+        if (head->augment != NULL) {
+            do {
+                augment(head, goback);
+            } while ((goback = goback->entry.rbe_parent));
+        }
+    } else
+        head->rbh_root = elm;
+    rbtree_insert_color(head, elm);
+    return (NULL);
 }
 
-void* rbtree_find(struct rbtree *head, void *key) {
-  struct rbnode *tmp = head->rbh_root;
-  int comp;
-  while (tmp) {
-    comp = head->cmp(key, (void*)tmp->content);
-    if (comp < 0)
-      tmp = tmp->entry.rbe_left;
-    else if (comp > 0)
-      tmp = tmp->entry.rbe_right;
-    else
-      return tmp;
-  }
-  return (NULL);
-}
-
-void* rbtree_next(struct rbtree *head, void *elmv) {
-  struct rbnode *elm = elmv;
-  if (elm->entry.rbe_right) {
-    elm = elm->entry.rbe_right;
-    while (elm->entry.rbe_left)
-      elm = elm->entry.rbe_left;
-  } else {
-    if (elm->entry.rbe_parent &&
-        (elm == (elm->entry.rbe_parent)->entry.rbe_left))
-      elm = elm->entry.rbe_parent;
-    else {
-      while (elm->entry.rbe_parent &&
-             (elm == (elm->entry.rbe_parent)->entry.rbe_right))
-        elm = elm->entry.rbe_parent;
-      elm = elm->entry.rbe_parent;
+void *rbtree_find(struct rbtree *head, void *key)
+{
+    struct rbnode *tmp = head->rbh_root;
+    int comp;
+    while (tmp) {
+        comp = head->cmp(key, (void *)tmp->content);
+        if (comp < 0)
+            tmp = tmp->entry.rbe_left;
+        else if (comp > 0)
+            tmp = tmp->entry.rbe_right;
+        else
+            return tmp;
     }
-  }
-  return elm;
+    return (NULL);
 }
 
-static struct rbnode *rbtree_minmax(struct rbtree *head, int val) {
-  struct rbnode *tmp = head->rbh_root;
-  struct rbnode *parent = NULL;
-  while (tmp) {
-    parent = tmp;
-    if (val < 0)
-      tmp = tmp->entry.rbe_left;
-    else
-      tmp = tmp->entry.rbe_right;
-  }
-  return parent;
+void *rbtree_next(struct rbtree *head, void *elmv)
+{
+    struct rbnode *elm = elmv;
+    if (elm->entry.rbe_right) {
+        elm = elm->entry.rbe_right;
+        while (elm->entry.rbe_left)
+            elm = elm->entry.rbe_left;
+    } else {
+        if (elm->entry.rbe_parent &&
+            (elm == (elm->entry.rbe_parent)->entry.rbe_left))
+            elm = elm->entry.rbe_parent;
+        else {
+            while (elm->entry.rbe_parent &&
+                   (elm == (elm->entry.rbe_parent)->entry.rbe_right))
+                elm = elm->entry.rbe_parent;
+            elm = elm->entry.rbe_parent;
+        }
+    }
+    return elm;
+}
+
+static struct rbnode *rbtree_minmax(struct rbtree *head, int val)
+{
+    struct rbnode *tmp = head->rbh_root;
+    struct rbnode *parent = NULL;
+    while (tmp) {
+        parent = tmp;
+        if (val < 0)
+            tmp = tmp->entry.rbe_left;
+        else
+            tmp = tmp->entry.rbe_right;
+    }
+    return parent;
 };
 
-static void rbtree_free_impl(struct rbnode *node, void (*free_cb)(void*)) {
-  if (node == NULL) return;
-  if (free_cb != NULL) free_cb(node->content);
-  rbtree_free_impl(node->entry.rbe_left, free_cb);
-  rbtree_free_impl(node->entry.rbe_right, free_cb);
-  free(node);
+static void rbtree_free_impl(struct rbnode *node, void (*free_cb)(void *))
+{
+    if (node == NULL)
+        return;
+    if (free_cb != NULL)
+        free_cb(node->content);
+    rbtree_free_impl(node->entry.rbe_left, free_cb);
+    rbtree_free_impl(node->entry.rbe_right, free_cb);
+    free(node);
 }
 
-void rbtree_free(struct rbtree *head, void (*free_cb)(void*)) {
-  rbtree_free_impl(head->rbh_root, free_cb);  
+void rbtree_free(struct rbtree *head, void (*free_cb)(void *))
+{
+    rbtree_free_impl(head->rbh_root, free_cb);
 }
